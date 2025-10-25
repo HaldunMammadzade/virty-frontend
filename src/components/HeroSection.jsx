@@ -2,50 +2,18 @@
 import { useState, useEffect } from 'react';
 
 export default function HeroSection() {
-  const [cubes, setCubes] = useState([]);
-
-  useEffect(() => {
-    const generateCubes = () => {
-      return Array.from({ length: 20 }, (_, i) => ({
-        id: i,
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        size: Math.random() * 100 + 60,
-        delay: Math.random() * 5,
-        duration: Math.random() * 15 + 15,
-      }));
-    };
-    setCubes(generateCubes());
-  }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20" style={{ background: 'linear-gradient(180deg, #0a1520 0%, #050a0f 100%)' }}>
-      {/* Background Grid */}
-      <div className="absolute inset-0 cyber-grid opacity-20"></div>
-      <div className="absolute inset-0 scan-lines"></div>
+    <section style={{
+        backgroundColor: "#050a0f",
+        backgroundImage: "url('/images/virty-cover1.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
 
-      {/* Holographic Cubes Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {cubes.map((cube) => (
-          <div
-            key={cube.id}
-            className="holographic-cube"
-            style={{
-              left: `${cube.left}%`,
-              top: `${cube.top}%`,
-              width: `${cube.size}px`,
-              height: `${cube.size}px`,
-              animationDelay: `${cube.delay}s`,
-              animationDuration: `${cube.duration}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Purple/Blue Border Frame Effect */}
-      <div className="absolute inset-4 md:inset-8 lg:inset-12 border-2 border-[#6366f1]/30 rounded-3xl pointer-events-none"></div>
-
-      {/* Content Container */}
+        
+      
       <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 py-20 text-center">
         {/* Main Logo Text */}
         <div className="mb-8">
@@ -62,14 +30,14 @@ export default function HeroSection() {
         {/* Subtitle */}
         <h2 className="hero-subtitle text-white mb-6" style={{
           fontSize: 'clamp(26px, 4vw, 42px)',
-          fontWeight: 300,
+          fontWeight: 600,
           letterSpacing: '0.02em',
         }}>
-          The portal to <span className="text-[#00ff88]">cyberspace</span>
+          The portal to cyberspace
         </h2>
 
         {/* Description */}
-        <p className="text-gray-400 text-base md:text-lg mb-12 max-w-3xl mx-auto leading-relaxed px-4">
+        <p className="text-white text-base md:text-lg mb-12 max-w-3xl mx-auto leading-relaxed px-4">
           Break free from physical limitations. Explore infinite digital landscapes where imagination becomes reality.
         </p>
 

@@ -32,12 +32,26 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <section className="relative py-32 px-6 lg:px-12" style={{ background: 'linear-gradient(180deg, #050a0f 0%, #0a1520 100%)' }}>
-      <div className="absolute inset-0 cyber-grid opacity-5"></div>
-      
-      <div className="max-w-[1400px] mx-auto">
+    <section
+      style={{
+        backgroundColor: "#050a0f",
+        backgroundImage: "url('/images/virty-cover3.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+      className="relative py-32 px-6 lg:px-12 overflow-hidden"
+    >
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background: "linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.85) 100%)",
+        }}
+      ></div>
+
+      <div className="max-w-[1400px] mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-20 mx-0 sm:mx-70">
           <div className="mb-8">
             <span className="section-label">Transform</span>
           </div>
@@ -45,7 +59,7 @@ export default function FeaturesSection() {
             Unlock infinite digital{' '}
             <span className="text-[#00ff88] neon-text">possibilities</span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-3xl mx-auto leading-relaxed">
+          <p className="text-white text-lg max-w-3xl mx-auto leading-relaxed text-center ">
             Experience the next generation of virtual interaction across multiple domains. Engage in immersive learning, host groundbreaking events, and explore limitless environments.
           </p>
         </div>
@@ -53,7 +67,7 @@ export default function FeaturesSection() {
         {/* Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="feature-card group">
+            <div key={index} className="feature-card group relative z-10">
               <div className="flex flex-col items-center">
                 {/* Icon */}
                 <div className="mb-6 p-4 rounded-full bg-[#00ff88]/10 group-hover:bg-[#00ff88]/20 transition-all">

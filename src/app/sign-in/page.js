@@ -17,8 +17,7 @@ export default function SignIn() {
   const inputStyle = {
     width: '100%',
     background: 'transparent',
-    border: 'none',
-    borderBottom: '1px solid rgba(0, 255, 136, 0.5)',
+    border: '1px solid rgba(0, 255, 136, 0.5)',
     color: '#00ff88',
     padding: '10px 4px',
     fontSize: '15px',
@@ -28,56 +27,14 @@ export default function SignIn() {
 
   return (
     <>
-      {/* Header */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a1520]/90 backdrop-blur-lg border-b border-[#00ff88]/10">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-          <div className="flex justify-between items-center h-20">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 bg-[#00ff88] rounded flex items-center justify-center">
-                <span className="text-black font-bold text-xl">V</span>
-              </div>
-              <span className="text-2xl font-bold text-[#00ff88] tracking-wide neon-text">VIRTY</span>
-            </Link>
-
-            {/* <div className="hidden md:flex items-center gap-12">
-              <Link href="/" className="text-white hover:text-[#00ff88] transition-colors text-base font-medium">
-                Home
-              </Link>
-              <Link href="/features" className="text-white hover:text-[#00ff88] transition-colors text-base font-medium">
-                Features
-              </Link>
-              <Link href="/about" className="text-white hover:text-[#00ff88] transition-colors text-base font-medium">
-                About
-              </Link>
-            </div> */}
-
-            <div className="flex items-center gap-4">
-              <Link 
-                href="/"
-                className="hidden sm:block px-6 py-2.5 border-2 border-white text-white hover:bg-white/10 transition-all rounded-lg text-sm font-semibold"
-              >
-                Client Download
-              </Link>
-              <Link 
-                href="/sign-up"
-                className="cyber-btn-primary"
-              >
-                Sign In
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Main */}
       <main className="relative min-h-screen flex items-center justify-center px-6 py-32" style={{ background: '#0a1824' }}>
-        {/* Glow Effect */}
-        <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#00ff88]/15 rounded-full blur-[150px]"></div>
+  
 
         {/* Card */}
-        <div className="w-full max-w-[650px] relative z-10 p-20">
-          <div className="border-2 border-[#00ff88] rounded-3xl overflow-hidden" style={{ 
-            background: 'rgba(0, 0, 0, 0.85)',
+        <div className="w-full max-w-[650px] relative z-10 ">
+          <div className="border-2 border-[#00ff88] rounded-3xl cyber-card overflow-hidden" style={{ 
+            background: '#0F1111',
             boxShadow: '0 0 60px rgba(0, 255, 136, 0.4)'
           }}>
             {/* Logo */}

@@ -42,20 +42,20 @@ export default function LogoSection() {
               <span className="text-[#00ff88] neon-text">existence</span>
             </h2>
 
-            <p className="text-gray-400 text-lg leading-relaxed">
+            <p className="text-white text-lg leading-relaxed">
               VIRTY transforms how humans connect and create. We build virtual environments that transcend traditional boundaries of interaction and learning.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
               <div>
                 <h4 className="text-[#00ff88] font-semibold text-lg mb-3">Subheading one</h4>
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-white  text-sm leading-relaxed">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim.
                 </p>
               </div>
               <div>
                 <h4 className="text-[#00ff88] font-semibold text-lg mb-3">Subheading two</h4>
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-white  text-sm leading-relaxed">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim.
                 </p>
               </div>
