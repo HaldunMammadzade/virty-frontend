@@ -58,8 +58,6 @@ export default function SignUp() {
   return (
     <>
     <main className="relative min-h-screen flex items-center justify-center px-6 py-32" style={{ background: '#0a1824' }}>
-        {/* <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#00ff88]/15 rounded-full blur-[150px]"></div> */}
-
         <div className="w-full max-w-[650px] relative z-10">
           <div className="border-2 border-[#00ff88] rounded-3xl cyber-card overflow-hidden" style={{ 
             background: '#0F1111',
