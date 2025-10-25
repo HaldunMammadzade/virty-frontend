@@ -1,9 +1,12 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import ContactSection from '@/components/ContactSection';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ToastContainer';
 
 export default function SignUp() {
+  const router = useRouter();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     city: '',
@@ -19,15 +22,26 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
     if (!isRobot) {
-      alert('Please verify you are not a robot');
+      showToast('Please verify you are not a robot', 'warning');
       return;
     }
     if (!agreedToTerms) {
-      alert('Please agree to the terms and conditions');
+      showToast('Please agree to the terms and conditions', 'error');
       return;
     }
-    console.log('Sign up:', formData);
+    if (formData.password !== formData.confirmPassword) {
+      showToast('Passwords do not match', 'error');
+      return;
+    }
+
+    sessionStorage.setItem('signupData', JSON.stringify(formData));
+    showToast('Registration successful! Redirecting...', 'success');
+    
+    setTimeout(() => {
+      router.push('/terms');
+    }, 1000);
   };
 
   const inputStyle = {
@@ -43,16 +57,14 @@ export default function SignUp() {
 
   return (
     <>
-      {/* Main */}
-      <main className="relative min-h-screen flex items-center justify-center px-6 py-32" style={{ background: '#0a1824' }}>
-       
-        {/* Card */}
+    <main className="relative min-h-screen flex items-center justify-center px-6 py-32" style={{ background: '#0a1824' }}>
+        {/* <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#00ff88]/15 rounded-full blur-[150px]"></div> */}
+
         <div className="w-full max-w-[650px] relative z-10">
           <div className="border-2 border-[#00ff88] rounded-3xl cyber-card overflow-hidden" style={{ 
-            background: 'rgba(0, 0, 0, 0.85)',
+            background: '#0F1111',
             boxShadow: '0 0 60px rgba(0, 255, 136, 0.4)'
           }}>
-            {/* Logo */}
             <div className="flex items-center justify-center gap-3 pt-10 pb-8">
               <div className="w-16 h-16 bg-[#00ff88] rounded-lg flex items-center justify-center" style={{
                 boxShadow: '0 0 40px rgba(0, 255, 136, 0.8)'
@@ -64,7 +76,6 @@ export default function SignUp() {
               }}>VIRTY</span>
             </div>
 
-            {/* Tabs */}
             <div className="grid grid-cols-2">
               <Link 
                 href="/sign-in"
@@ -77,9 +88,7 @@ export default function SignUp() {
               </div>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="px-10 py-6">
-              {/* Name Surname */}
               <div className="mb-3">
                 <input
                   type="text"
@@ -91,7 +100,6 @@ export default function SignUp() {
                 />
               </div>
 
-              {/* City */}
               <div className="mb-3">
                 <input
                   type="text"
@@ -103,7 +111,6 @@ export default function SignUp() {
                 />
               </div>
 
-              {/* +994 */}
               <div className="mb-3">
                 <input
                   type="tel"
@@ -115,7 +122,6 @@ export default function SignUp() {
                 />
               </div>
 
-              {/* E-mail */}
               <div className="mb-3">
                 <input
                   type="email"
@@ -127,7 +133,6 @@ export default function SignUp() {
                 />
               </div>
 
-              {/* Password */}
               <div className="mb-3 relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -149,7 +154,6 @@ export default function SignUp() {
                 </button>
               </div>
 
-              {/* Repeat Password */}
               <div className="mb-5 relative">
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
@@ -171,7 +175,6 @@ export default function SignUp() {
                 </button>
               </div>
 
-              {/* Terms */}
               <div className="flex items-start gap-2 mb-4">
                 <input
                   type="checkbox"
@@ -187,7 +190,6 @@ export default function SignUp() {
                 </label>
               </div>
 
-              {/* reCAPTCHA */}
               <div className="flex items-center justify-between px-4 py-3 border border-[#00ff88]/40 rounded-lg bg-black/40 mb-5">
                 <div className="flex items-center gap-2">
                   <input
@@ -210,7 +212,6 @@ export default function SignUp() {
                 </div>
               </div>
 
-              {/* Button */}
               <button
                 type="submit"
                 className="w-full bg-[#00ff88] text-black py-4 rounded-lg text-base font-bold hover:bg-[#00dd77] transition-all"
@@ -222,7 +223,6 @@ export default function SignUp() {
               </button>
             </form>
 
-            {/* Bottom */}
             <div className="text-center py-5 border-t border-[#00ff88]/20">
               <p className="text-sm text-gray-400">
                 Already have an account?{' '}
@@ -234,7 +234,6 @@ export default function SignUp() {
           </div>
         </div>
       </main>
-            <ContactSection/>
     </>
   );
 }

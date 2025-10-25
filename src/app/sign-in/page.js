@@ -11,7 +11,6 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Sign in:', formData);
   };
 
   const inputStyle = {
@@ -30,7 +29,6 @@ export default function SignIn() {
       {/* Main */}
       <main className="relative min-h-screen flex items-center justify-center px-6 py-32" style={{ background: '#0a1824' }}>
   
-
         {/* Card */}
         <div className="w-full max-w-[650px] relative z-10 ">
           <div className="border-2 border-[#00ff88] rounded-3xl cyber-card overflow-hidden" style={{ 

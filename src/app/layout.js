@@ -2,6 +2,7 @@ import { Chakra_Petch } from 'next/font/google'
 import '../styles/globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import { ToastProvider } from '@/components/ToastContainer'
 
 const chakraPetch = Chakra_Petch({ 
   subsets: ['latin'],
@@ -18,9 +19,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={chakraPetch.className}>
-        <Navigation />
-        {children}
-        <Footer />
+        <ToastProvider>
+          <Navigation />
+          {children}
+          <Footer />
+        </ToastProvider>
       </body>
     </html>
   )
