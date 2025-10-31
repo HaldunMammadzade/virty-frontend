@@ -25,7 +25,7 @@ export default function ContactSection() {
 
       <div className="max-w-[1400px] mx-auto">
         <div
-          className="border-2 border-[#00ff88]/30 rounded-3xl p-12 md:p-16 lg:p-20"
+          className="border-2 border-[#00ff88]/30 rounded-3xl md:p-12 p-5 md:p-16 lg:p-20"
           style={{
             background: "rgba(10, 21, 32, 0.4)",
             backdropFilter: "blur(20px)",

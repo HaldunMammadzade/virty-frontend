@@ -13,15 +13,16 @@ export default function SignIn() {
     e.preventDefault();
   };
 
-  const inputStyle = {
-    width: '100%',
-    background: 'transparent',
-    border: '1px solid rgba(0, 255, 136, 0.5)',
-    color: '#00ff88',
-    padding: '10px 4px',
-    fontSize: '15px',
-    outline: 'none',
-    transition: 'all 0.3s ease'
+   const inputStyle = {
+    width: "100%",
+    background: "transparent",
+    border: "none",
+    borderBottom: "1px solid rgba(0, 255, 136, 0.5)",
+    color: "#00ff88",
+    padding: "10px 4px",
+    fontSize: "15px",
+    outline: "none",
+    transition: "all 0.3s ease",
   };
 
   return (
@@ -61,7 +62,7 @@ export default function SignIn() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="px-10 py-8">
+            <form onSubmit={handleSubmit} className="md:px-10 px-4 md:py-6 py-3">
               {/* Email */}
               <div className="mb-5">
                 <input

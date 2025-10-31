@@ -44,7 +44,7 @@ export default function Terms() {
       )}
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <div className="border-2 border-[#00ff88]/40 rounded-2xl p-12" style={{ 
+        <div className="border-2 border-[#00ff88]/40 rounded-2xl md:p-12 p-6" style={{ 
           background: 'rgba(5, 10, 15, 0.9)',
           backdropFilter: 'blur(20px)',
           boxShadow: '0 0 40px rgba(0, 255, 136, 0.2)'

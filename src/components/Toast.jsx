@@ -1,14 +1,68 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 export default function Toast({ message, type = 'error', onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, 4000);
+  const [isHovered, setIsHovered] = useState(false);
+  const [progress, setProgress] = useState(100);
+  const timerRef = useRef(null);
+  const progressIntervalRef = useRef(null);
+  const startTimeRef = useRef(null);
+  const remainingTimeRef = useRef(4000);
+  const isPausedRef = useRef(false);
 
-    return () => clearTimeout(timer);
-  }, [onClose]);
+  // Start timer once on mount
+  useEffect(() => {
+    startTimeRef.current = Date.now();
+    
+    const startAnimation = () => {
+      timerRef.current = setTimeout(() => {
+        onClose();
+      }, remainingTimeRef.current);
+
+      progressIntervalRef.current = setInterval(() => {
+        if (isPausedRef.current) return;
+        
+        const elapsed = Date.now() - startTimeRef.current;
+        const remaining = Math.max(0, remainingTimeRef.current - elapsed);
+        const progressPercent = (remaining / 4000) * 100;
+        setProgress(progressPercent);
+
+        if (remaining <= 0) {
+          clearInterval(progressIntervalRef.current);
+        }
+      }, 16);
+    };
+
+    startAnimation();
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+    };
+  }, []); // Empty dependency - only run once on mount
+
+  // Handle pause/resume separately
+  useEffect(() => {
+    if (isHovered) {
+      // Pause
+      isPausedRef.current = true;
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      const elapsed = Date.now() - startTimeRef.current;
+      remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
+    } else {
+      // Resume
+      if (isPausedRef.current) {
+        isPausedRef.current = false;
+        startTimeRef.current = Date.now();
+        
+        timerRef.current = setTimeout(() => {
+          onClose();
+        }, remainingTimeRef.current);
+      }
+    }
+  }, [isHovered, onClose]);
 
   const getIcon = () => {
     switch (type) {
@@ -30,7 +84,7 @@ export default function Toast({ message, type = 'error', onClose }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         );
-      default: // error
+      default:
         return (
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -65,7 +119,7 @@ export default function Toast({ message, type = 'error', onClose }) {
           icon: '#3b82f6',
           glow: 'rgba(59, 130, 246, 0.4)'
         };
-      default: // error
+      default:
         return {
           bg: 'rgba(239, 68, 68, 0.15)',
           border: '#ef4444',
@@ -81,9 +135,8 @@ export default function Toast({ message, type = 'error', onClose }) {
   return (
     <div 
       className="toast-container"
-      style={{
-        animation: 'slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div 
         className="toast-content"
@@ -96,10 +149,10 @@ export default function Toast({ message, type = 'error', onClose }) {
           boxShadow: `0 8px 32px ${colors.glow}, 0 0 60px ${colors.glow}`,
           minWidth: '320px',
           maxWidth: '420px',
+          cursor: 'pointer',
         }}
       >
         <div className="flex items-start gap-4">
-          {/* Icon */}
           <div 
             className="flex-shrink-0"
             style={{
@@ -110,7 +163,6 @@ export default function Toast({ message, type = 'error', onClose }) {
             {getIcon()}
           </div>
 
-          {/* Message */}
           <div className="flex-1">
             <p 
               className="font-semibold text-base leading-relaxed"
@@ -120,7 +172,6 @@ export default function Toast({ message, type = 'error', onClose }) {
             </p>
           </div>
 
-          {/* Close Button */}
           <button
             onClick={onClose}
             className="flex-shrink-0 hover:opacity-70 transition-opacity"
@@ -132,7 +183,6 @@ export default function Toast({ message, type = 'error', onClose }) {
           </button>
         </div>
 
-        {/* Progress Bar */}
         <div 
           className="progress-bar"
           style={{
@@ -143,24 +193,14 @@ export default function Toast({ message, type = 'error', onClose }) {
             height: '3px',
             background: colors.border,
             borderRadius: '0 0 14px 14px',
-            animation: 'shrink 4s linear forwards',
             transformOrigin: 'left',
+            transform: `scaleX(${progress / 100})`,
+            transition: 'transform 0.016s linear',
           }}
         />
       </div>
 
-      <style jsx>{`
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(100px) scale(0.8);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0) scale(1);
-          }
-        }
-
+      <style>{`
         @keyframes iconPulse {
           0%, 100% {
             transform: scale(1);
@@ -169,15 +209,6 @@ export default function Toast({ message, type = 'error', onClose }) {
           50% {
             transform: scale(1.1);
             opacity: 0.8;
-          }
-        }
-
-        @keyframes shrink {
-          from {
-            transform: scaleX(1);
-          }
-          to {
-            transform: scaleX(0);
           }
         }
 

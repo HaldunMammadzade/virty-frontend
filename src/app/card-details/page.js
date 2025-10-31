@@ -223,7 +223,7 @@ export default function CardDetails() {
                   <div className="bg-white/90 rounded h-10 flex items-center justify-end px-4" style={{
                     backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.03) 10px, rgba(0,0,0,0.03) 20px)',
                   }}>
-                    <span className="text-black font-mono text-lg tracking-widest italic">
+                    <span className="text-black font-mono text-md tracking-widest italic">
                       {cardData.cvv || '•••'}
                     </span>
                   </div>
@@ -252,7 +252,7 @@ export default function CardDetails() {
           </div>
 
           {/* Form */}
-          <div className="border-2 border-[#00ff88]/40 rounded-2xl p-10" style={{ 
+          <div className="border-2 border-[#00ff88]/40 rounded-2xl md:p-10 p-5" style={{ 
             background: 'rgba(5, 10, 15, 0.9)',
             backdropFilter: 'blur(20px)',
             boxShadow: '0 0 40px rgba(0, 255, 136, 0.2)'
@@ -266,7 +266,7 @@ export default function CardDetails() {
                   placeholder="Kartın 16 rəqəmli"
                   value={cardData.number}
                   onChange={handleNumberChange}
-                  className="w-full bg-transparent border-b-2 border-[#00ff88]/50 text-[#00ff88] placeholder-[#00ff88]/40 py-3 text-lg outline-none focus:border-[#00ff88] transition-all font-mono"
+                  className="w-full bg-transparent border-b-2 border-[#00ff88]/50 text-[#00ff88] placeholder-[#00ff88]/40 py-3 text-md outline-none focus:border-[#00ff88] transition-all font-mono"
                   required
                 />
               </div>
@@ -277,7 +277,7 @@ export default function CardDetails() {
                   placeholder="AA/İİ"
                   value={cardData.expiry}
                   onChange={handleExpiryChange}
-                  className="w-full bg-transparent border-b-2 border-[#00ff88]/50 text-[#00ff88] placeholder-[#00ff88]/40 py-3 text-lg outline-none focus:border-[#00ff88] transition-all font-mono"
+                  className="w-full bg-transparent border-b-2 border-[#00ff88]/50 text-[#00ff88] placeholder-[#00ff88]/40 py-3 text-md outline-none focus:border-[#00ff88] transition-all font-mono"
                   required
                 />
                 <input
@@ -287,7 +287,7 @@ export default function CardDetails() {
                   onChange={handleCvvChange}
                   onFocus={() => setIsFlipped(true)}
                   onBlur={() => setIsFlipped(false)}
-                  className="w-full bg-transparent border-b-2 border-[#00ff88]/50 text-[#00ff88] placeholder-[#00ff88]/40 py-3 text-lg outline-none focus:border-[#00ff88] transition-all font-mono"
+                  className="w-full bg-transparent border-b-2 border-[#00ff88]/50 text-[#00ff88] placeholder-[#00ff88]/40 py-3 text-md outline-none focus:border-[#00ff88] transition-all font-mono"
                   required
                 />
               </div>
@@ -298,7 +298,7 @@ export default function CardDetails() {
                   placeholder="Kart sahibinin adı"
                   value={cardData.name}
                   onChange={(e) => setCardData({ ...cardData, name: e.target.value.toUpperCase() })}
-                  className="w-full bg-transparent border-b-2 border-[#00ff88]/50 text-[#00ff88] placeholder-[#00ff88]/40 py-3 text-lg outline-none focus:border-[#00ff88] transition-all uppercase"
+                  className="w-full bg-transparent border-b-2 border-[#00ff88]/50 text-[#00ff88] placeholder-[#00ff88]/40 py-3 text-md outline-none focus:border-[#00ff88] transition-all uppercase"
                   required
                 />
               </div>
@@ -309,7 +309,7 @@ export default function CardDetails() {
 
               <button
                 type="submit"
-                className="w-full bg-[#00ff88] text-black py-4 rounded-lg text-lg font-bold hover:bg-[#00dd77] transition-all"
+                className="w-full bg-[#00ff88] text-black py-4 rounded-lg text-md font-bold hover:bg-[#00dd77] transition-all"
                 style={{
                   boxShadow: '0 0 25px rgba(0, 255, 136, 0.6)'
                 }}

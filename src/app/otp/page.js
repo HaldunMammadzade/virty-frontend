@@ -101,7 +101,7 @@ export default function OTP() {
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onPaste={handlePaste}
-                className="w-14 h-16 text-center text-2xl font-bold bg-transparent border-2 rounded-lg outline-none transition-all"
+                className="md:w-14 md:h-16 w-10 h-15 text-center text-2xl font-bold bg-transparent border-2 rounded-lg outline-none transition-all"
                 style={{
                   borderColor: digit ? '#00ff88' : 'rgba(0, 255, 136, 0.3)',
                   color: '#00ff88',

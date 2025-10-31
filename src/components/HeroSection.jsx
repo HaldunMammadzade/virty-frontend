@@ -20,6 +20,7 @@ export default function HeroSection() {
           <h1 className="hero-title neon-text mb-6" style={{ 
             fontSize: 'clamp(70px, 12vw, 160px)',
             fontWeight: 800,
+            // fontFamily: ,
             letterSpacing: '0.1em',
             lineHeight: 0.9,
           }}>
