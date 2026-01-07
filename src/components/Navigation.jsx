@@ -1,10 +1,66 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { tokenManager, auth } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check authentication status
+    const checkAuth = () => {
+      const tokens = tokenManager.getTokens();
+      const expired = tokenManager.isAccessTokenExpired();
+      
+      if (tokens?.accessToken && !expired) {
+        setIsAuthenticated(true);
+        // Get email from sessionStorage if available
+        const signupData = sessionStorage.getItem("signupData");
+        if (signupData) {
+          try {
+            const data = JSON.parse(signupData);
+            setUserEmail(data.email || "");
+          } catch (e) {
+            console.error("Error parsing signup data:", e);
+          }
+        }
+      } else {
+        setIsAuthenticated(false);
+        setUserEmail("");
+      }
+    };
+
+    checkAuth();
+    
+    // Check auth status periodically
+    const interval = setInterval(checkAuth, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await auth.logout();
+      setIsAuthenticated(false);
+      setUserEmail("");
+      sessionStorage.removeItem("signupData");
+      router.push("/");
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Still clear local state even if API call fails
+      setIsAuthenticated(false);
+      setUserEmail("");
+      sessionStorage.removeItem("signupData");
+      router.push("/");
+      setIsOpen(false);
+    }
+  };
 
   const handleLinkClick = () => setIsOpen(false);
 
@@ -24,14 +80,37 @@ export default function Navigation() {
             />
           </Link>
 
-          {/* Auth Buttons (Desktop) */}
+          {/* Auth Buttons / User Menu (Desktop) */}
           <div className="hidden md:flex items-center gap-4">
-            <Link href="/" className="cyber-btn-secondary w-full sm:w-auto">
-              Client Download
-            </Link>
-            <Link href="/sign-in" className="cyber-btn-primary">
-              Sign In
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-[#00ff88]/10 border border-[#00ff88]/30">
+                  <div className="w-8 h-8 rounded-full bg-[#00ff88] flex items-center justify-center">
+                    <span className="text-black font-bold text-sm">
+                      {userEmail ? userEmail.charAt(0).toUpperCase() : "U"}
+                    </span>
+                  </div>
+                  <span className="text-white text-sm max-w-[150px] truncate">
+                    {userEmail || "User"}
+                  </span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 text-[#00ff88] border border-[#00ff88]/50 rounded-lg hover:bg-[#00ff88]/10 transition-all"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/" className="cyber-btn-secondary w-full sm:w-auto">
+                  Client Download
+                </Link>
+                <Link href="/sign-in" className="cyber-btn-primary">
+                  Sign In
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -94,20 +173,45 @@ export default function Navigation() {
             </Link>
 
             <div className="pt-3 space-y-2">
-              <Link
-                href="/sign-in"
-                onClick={handleLinkClick}
-                className="block text-center px-6 py-2.5 border-2 border-white text-white rounded-lg hover:border-[#00ff88] hover:text-[#00ff88] transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/sign-up"
-                onClick={handleLinkClick}
-                className="block text-center cyber-btn-primary"
-              >
-                Client Download
-              </Link>
+              {isAuthenticated ? (
+                <>
+                  <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#00ff88]/10 border border-[#00ff88]/30">
+                    <div className="w-10 h-10 rounded-full bg-[#00ff88] flex items-center justify-center">
+                      <span className="text-black font-bold">
+                        {userEmail ? userEmail.charAt(0).toUpperCase() : "U"}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-white text-sm font-medium">
+                        {userEmail || "User"}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-center px-6 py-2.5 border-2 border-[#00ff88] text-[#00ff88] rounded-lg hover:bg-[#00ff88]/10 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/sign-in"
+                    onClick={handleLinkClick}
+                    className="block text-center px-6 py-2.5 border-2 border-white text-white rounded-lg hover:border-[#00ff88] hover:text-[#00ff88] transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/sign-up"
+                    onClick={handleLinkClick}
+                    className="block text-center cyber-btn-primary"
+                  >
+                    Client Download
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

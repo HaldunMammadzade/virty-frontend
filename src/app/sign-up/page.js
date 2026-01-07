@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ToastContainer";
 import CountrySelector from "@/components/CountrySelector";
+import { auth } from "@/lib/api";
 
 export default function SignUp() {
   const router = useRouter();
@@ -52,8 +53,9 @@ const countries = [
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isRobot, setIsRobot] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!isRobot) {
@@ -76,21 +78,40 @@ const countries = [
       return;
     }
 
-    const fullPhone = selectedCountry.code + " " + formData.phone;
-    sessionStorage.setItem(
-      "signupData",
-      JSON.stringify({
-        ...formData,
-        phone: fullPhone,
-        country: selectedCountry.name,
-      })
-    );
+    setIsLoading(true);
 
-    showToast("Registration successful! Redirecting...", "success");
+    try {
+      // Format phone number according to selected country mask
+      const formattedPhone = formData.phoneDisplay || formatPhoneNumber(cleanPhone, selectedCountry.mask);
+      
+      const registerData = {
+        userName: formData.name,
+        city: formData.city,
+        countryCode: selectedCountry.code,
+        number: formattedPhone, // Send formatted phone number
+        email: formData.email,
+        password: formData.password,
+        repeatPassword: formData.confirmPassword,
+        hasAcceptedTerms: agreedToTerms,
+        recaptchaToken: "recaptcha-token-placeholder", // TODO: Add actual reCAPTCHA token
+      };
 
-    setTimeout(() => {
-      router.push("/terms");
-    }, 1000);
+      const response = await auth.register(registerData);
+      
+      showToast("Registration successful! Please login...", "success");
+
+      setTimeout(() => {
+        router.push("/sign-in");
+      }, 1000);
+    } catch (error) {
+      console.error("Registration error:", error);
+      showToast(
+        error.message || error.data?.detail || "Registration failed. Please try again.",
+        "error"
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const inputStyle = {
@@ -388,12 +409,13 @@ const handlePhoneChange = (e) => {
 
               <button
                 type="submit"
-                className="w-full bg-[#00ff88] text-black py-4 rounded-lg text-base font-bold hover:bg-[#00dd77] transition-all"
+                disabled={isLoading}
+                className="w-full bg-[#00ff88] text-black py-4 rounded-lg text-base font-bold hover:bg-[#00dd77] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   boxShadow: "0 0 25px rgba(0, 255, 136, 0.6)",
                 }}
               >
-                Sign up
+                {isLoading ? "Registering..." : "Sign up"}
               </button>
             </form>
 

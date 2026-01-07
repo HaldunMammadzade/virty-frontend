@@ -1,16 +1,58 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ToastContainer';
 import ContactSection from '@/components/ContactSection';
+import { auth } from '@/lib/api';
 export default function SignIn() {
+  const router = useRouter();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.email || !formData.password) {
+      showToast('Please fill in all fields', 'error');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await auth.login({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      // Store email for OTP page
+      sessionStorage.setItem(
+        "signupData",
+        JSON.stringify({
+          email: formData.email,
+        })
+      );
+
+      showToast('Login successful! Please verify your email...', 'success');
+      
+      setTimeout(() => {
+        router.push('/otp');
+      }, 1000);
+    } catch (error) {
+      console.error('Login error:', error);
+      showToast(
+        error.message || error.data?.detail || 'Login failed. Please check your credentials.',
+        'error'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
    const inputStyle = {
@@ -107,12 +149,13 @@ export default function SignIn() {
               {/* Button */}
               <button
                 type="submit"
-                className="w-full bg-[#00ff88] text-black py-4 rounded-lg text-base font-bold hover:bg-[#00dd77] transition-all"
+                disabled={isLoading}
+                className="w-full bg-[#00ff88] text-black py-4 rounded-lg text-base font-bold hover:bg-[#00dd77] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   boxShadow: '0 0 25px rgba(0, 255, 136, 0.6)'
                 }}
               >
-                Sign in
+                {isLoading ? 'Signing in...' : 'Sign in'}
               </button>
 
               {/* Divider */}

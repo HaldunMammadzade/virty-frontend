@@ -2,12 +2,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ToastContainer';
+import { auth } from '@/lib/api';
 
 export default function OTP() {
   const router = useRouter();
-   const { showToast } = useToast();
+  const { showToast } = useToast();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const inputRefs = useRef([]);
 
   useEffect(() => {
@@ -52,21 +55,67 @@ export default function OTP() {
     inputRefs.current[lastFilledIndex]?.focus();
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     const code = otp.join('');
     if (code.length !== 6) {
-      showToast('Please enter complete OTP code');
+      showToast('Please enter complete OTP code', 'error');
       return;
     }
-    
-    console.log('Verifying OTP:', code);
-    router.push('/card-details');
+
+    if (!email) {
+      showToast('Email not found. Please go back to sign up.', 'error');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await auth.verifyEmail({
+        email: email,
+        otpCode: code,
+      });
+
+      showToast('Email verified successfully! Redirecting...', 'success');
+      
+      setTimeout(() => {
+        router.push('/');
+      }, 1000);
+    } catch (error) {
+      console.error('Verification error:', error);
+      showToast(
+        error.message || error.data?.detail || 'Verification failed. Please check your OTP code.',
+        'error'
+      );
+      // Clear OTP on error
+      setOtp(['', '', '', '', '', '']);
+      inputRefs.current[0]?.focus();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleResend = () => {
-    setOtp(['', '', '', '', '', '']);
-    inputRefs.current[0]?.focus();
-    console.log('Resending OTP to:', email);
+  const handleResend = async () => {
+    if (!email) {
+      showToast('Email not found. Please go back to sign up.', 'error');
+      return;
+    }
+
+    setIsResending(true);
+
+    try {
+      await auth.resendOTP({ email });
+      setOtp(['', '', '', '', '', '']);
+      inputRefs.current[0]?.focus();
+      showToast('OTP code resent. Please check your email.', 'success');
+    } catch (error) {
+      console.error('Resend OTP error:', error);
+      showToast(
+        error.message || error.data?.detail || 'Failed to resend OTP. Please try again.',
+        'error'
+      );
+    } finally {
+      setIsResending(false);
+    }
   };
 
   return (
@@ -114,20 +163,22 @@ export default function OTP() {
           <div className="text-center mb-8">
             <button
               onClick={handleResend}
-              className="text-sm text-gray-400 hover:text-[#00ff88] transition-colors underline"
+              disabled={isResending}
+              className="text-sm text-gray-400 hover:text-[#00ff88] transition-colors underline disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Resend OTP code
+              {isResending ? 'Sending...' : 'Resend OTP code'}
             </button>
           </div>
 
           <button
             onClick={handleVerify}
-            className="w-full bg-[#00ff88] text-black py-4 rounded-lg text-lg font-bold hover:bg-[#00dd77] transition-all"
+            disabled={isLoading}
+            className="w-full bg-[#00ff88] text-black py-4 rounded-lg text-lg font-bold hover:bg-[#00dd77] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               boxShadow: '0 0 25px rgba(0, 255, 136, 0.6)'
             }}
           >
-            Verify
+            {isLoading ? 'Verifying...' : 'Verify'}
           </button>
         </div>
       </div>
